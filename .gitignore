@@ -1,0 +1,7 @@
+input/
+output/
+.tmp/
+__pycache__/
+errors.log
+
+
