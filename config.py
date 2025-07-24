@@ -2,7 +2,7 @@
 import os
 
 # PDF 文件路径
-PDF_PATH = r"D:\workspace\pdf_convert_clean_trans\input\ISO 26262-1-2018.pdf"
+PDF_PATH = r"D:\workspace\pdf_convert_clean_trans\input\test.pdf"
 
 # 处理目录
 TMP_DIR = os.path.join(os.getcwd(), ".tmp")
@@ -14,5 +14,6 @@ DEBUG_CLEAN_DIR = os.path.join(TMP_DIR, "debug_clean_chunk")
 DEBUG_TRANS_DIR = os.path.join(TMP_DIR, "debug_trans_chunk")
 
 # LLM 配置
-LLM_API_KEY = "sk-eac019be79f14f948591d963d8c17656"
+LLM_API_KEY = "sk-8483ba64523a4f4c90410b8986040809"
 max_chars_per_chunk = 6000  # 每个 Markdown 块的最大字符数
+DEBUG = True  # 是否启用调试模式

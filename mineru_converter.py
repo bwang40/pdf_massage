@@ -2,21 +2,22 @@
 import subprocess
 import shutil
 import os
-from pathlib import Path
-from config import PDF_PATH, TMP_DIR
 
-def convert_pdf_to_markdown():
+def convert_pdf_to_markdown(pdf_path=None, output_dir=None):
+    # 使用传入参数或默认值
+    pdf_path = pdf_path or "D:\\workspace\\pdf_convert_clean_trans\\input\\test.pdf"
+    output_dir = output_dir or os.path.join(os.getcwd(), ".tmp", "origin")
     # 获取文件名并替换字符
-    filename = os.path.basename(PDF_PATH)
+    filename = os.path.basename(pdf_path)
     new_filename = filename.replace("-", "_").replace(" ", "_")
-    new_pdf_path = os.path.join(TMP_DIR, new_filename)
+    new_pdf_path = os.path.join(output_dir, new_filename)
 
     # 创建 .tmp 文件夹
     tmp_dir = os.path.dirname(new_pdf_path)
     os.makedirs(tmp_dir, exist_ok=True)
 
     # 将原始 PDF 文件复制到 .tmp 文件夹
-    shutil.copy(PDF_PATH, new_pdf_path)
+    shutil.copy(pdf_path, new_pdf_path)
 
     # 构造输出目录
     output_dir = os.path.join(tmp_dir, "origin")

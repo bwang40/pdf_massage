@@ -1,8 +1,8 @@
 # markdown_processing/translator.py
 from llama_index.core.prompts import PromptTemplate
-from utility import split_markdown_by_heading, run_cleaning, write_debug_chunks
+from utility import split_markdown_by_heading, run_llm_process, write_debug_chunks
 from pathlib import Path
-from config import max_chars_per_chunk
+from config import max_chars_per_chunk, DEBUG_TRANS_DIR
 
 
 # 翻译 Prompt 模板
@@ -27,9 +27,9 @@ translation_prompt = PromptTemplate("""
 def translate_md(input_path: str, output_path: str, llm=None, debug=False):
     text = Path(input_path).read_text(encoding="utf-8")
     chunks = split_markdown_by_heading(text, max_chars_per_chunk=max_chars_per_chunk)
-    results = run_cleaning(chunks, translation_prompt, llm)
+    results = run_llm_process(chunks, translation_prompt, llm)
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     Path(output_path).write_text("\n\n".join(results), encoding="utf-8")
 
     if debug:
-        write_debug_chunks(chunks, results, input_path)
+        write_debug_chunks(chunks, results, input_path, DEBUG_TRANS_DIR)
