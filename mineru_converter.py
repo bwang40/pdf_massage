@@ -4,9 +4,6 @@ import shutil
 import os
 
 def convert_pdf_to_markdown(pdf_path=None, output_dir=None):
-    # 使用传入参数或默认值
-    pdf_path = pdf_path or "D:\\workspace\\pdf_convert_clean_trans\\input\\test.pdf"
-    output_dir = output_dir or os.path.join(os.getcwd(), ".tmp", "origin")
     # 获取文件名并替换字符
     filename = os.path.basename(pdf_path)
     new_filename = filename.replace("-", "_").replace(" ", "_")
@@ -20,7 +17,6 @@ def convert_pdf_to_markdown(pdf_path=None, output_dir=None):
     shutil.copy(pdf_path, new_pdf_path)
 
     # 构造输出目录
-    output_dir = os.path.join(tmp_dir, "origin")
     os.makedirs(output_dir, exist_ok=True)
 
     # 调用 mineru 命令行工具进行 PDF 转换

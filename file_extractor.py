@@ -9,12 +9,16 @@ def sanitize_name(name: str) -> str:
     return name.replace(" ", "_")
 
 def extract_auto_contents(input_dir: str, output_dir: str):
+    # 确保输入目录路径正确
     input_path = Path(input_dir)
 
-    for sub_dir in input_path.iterdir():
+    # 获取所有子目录并打印调试信息
+    sub_dirs = list(input_path.iterdir())
+    
+    for sub_dir in sub_dirs:
         if not sub_dir.is_dir():
             continue
-
+        
         auto_path = sub_dir / "auto"
         if not auto_path.exists():
             continue
@@ -25,10 +29,13 @@ def extract_auto_contents(input_dir: str, output_dir: str):
         os.makedirs(target_subdir, exist_ok=True)
 
         # 拷贝 auto 下的 Markdown 文件（*.md）
-        for md_file in auto_path.glob("*.md"):
+        md_files = list(auto_path.glob("*.md"))
+        
+        for md_file in md_files:
             if md_file.is_file():
                 sanitized_filename = sanitize_name(md_file.name)
-                shutil.copy2(md_file, os.path.join(target_subdir, sanitized_filename))
+                dest_path = os.path.join(target_subdir, sanitized_filename)
+                shutil.copy2(md_file, dest_path)
 
         # 拷贝 auto/images 目录下的所有文件
         image_dir = auto_path / "images"
@@ -36,8 +43,10 @@ def extract_auto_contents(input_dir: str, output_dir: str):
             target_image_dir = os.path.join(target_subdir, "images")
             os.makedirs(target_image_dir, exist_ok=True)
 
-            for img_file in image_dir.rglob("*.*"):
+            img_files = list(image_dir.rglob("*.*"))
+            for img_file in img_files:
                 if img_file.is_file():
                     sanitized_img_name = sanitize_name(img_file.name)
-                    shutil.copy2(img_file, os.path.join(target_image_dir, sanitized_img_name))
+                    dest_path = os.path.join(target_image_dir, sanitized_img_name)
+                    shutil.copy2(img_file, dest_path)
 

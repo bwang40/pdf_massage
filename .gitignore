@@ -3,5 +3,6 @@ output/
 .tmp/
 __pycache__/
 errors.log
+api_key.py
 
 

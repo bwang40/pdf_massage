@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Callable, Optional
 import logging
+import shutil
 
 from mineru_converter import convert_pdf_to_markdown
 from file_extractor import extract_auto_contents
@@ -10,8 +11,10 @@ from cleaner import clean_md
 from translator import translate_md
 from config import (
     EXTRACTED_DIR, CLEANED_DIR, TRANSLATED_DIR, ORIGIN_DIR,
-    DEBUG, PDF_PATH, LLM_API_KEY
+    DEBUG, PDF_PATH
 )
+
+from api_key import LLM_API_KEY  # Ensure this is imported correctly
 from llama_index.core import Settings
 from llama_index.llms.deepseek import DeepSeek
 
@@ -23,6 +26,18 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def copy_non_markdown_files(input_dir: Path, output_dir: Path) -> None:
+    """递归地复制非Markdown文件和文件夹"""
+    for item in input_dir.iterdir():
+        dst = output_dir / item.name
+        if item.is_dir():
+            print(f"复制文件夹: {item}")
+            dst.mkdir(parents=True, exist_ok=True)  # 创建目标文件夹
+            copy_non_markdown_files(item, dst)  # 递归处理子文件夹
+        elif item.suffix.lower() != ".md":
+            print(f"复制文件: {item}")
+            shutil.copy2(item, dst)  # 复制非Markdown文件
+
 def process_files(
     input_dir: Path,
     output_dir: Path,
@@ -31,7 +46,16 @@ def process_files(
     debug: bool = False,
     parallel: bool = False
 ) -> None:
-    """处理目录中的所有Markdown文件"""
+    """处理目录中的所有Markdown文件并复制非Markdown文件夹"""
+    # 复制所有非Markdown文件夹
+    
+    # 确保输出目录存在
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # 复制所有非 Markdown 文件和文件夹
+    copy_non_markdown_files(input_dir, output_dir)
+    
+    # 处理Markdown文件
     files = list(input_dir.rglob("*.md"))
     if not files:
         logger.warning(f"在目录 {input_dir} 中未找到Markdown文件")
@@ -73,6 +97,7 @@ def main() -> None:
             Path(EXTRACTED_DIR),
             Path(CLEANED_DIR),
             clean_md,
+            llm = Settings.llm,
             debug=DEBUG
         )
 
@@ -82,6 +107,7 @@ def main() -> None:
             Path(CLEANED_DIR),
             Path(TRANSLATED_DIR),
             translate_md,
+            llm = Settings.llm,
             debug=DEBUG
         )
 

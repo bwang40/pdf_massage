@@ -14,6 +14,6 @@ DEBUG_CLEAN_DIR = os.path.join(TMP_DIR, "debug_clean_chunk")
 DEBUG_TRANS_DIR = os.path.join(TMP_DIR, "debug_trans_chunk")
 
 # LLM 配置
-LLM_API_KEY = "sk-8483ba64523a4f4c90410b8986040809"
+
 max_chars_per_chunk = 6000  # 每个 Markdown 块的最大字符数
 DEBUG = True  # 是否启用调试模式
