@@ -1,6 +1,6 @@
 # markdown_processing/translator.py
 from llama_index.core.prompts import PromptTemplate
-from utility import split_markdown_by_heading, run_llm_process, write_debug_chunks
+from .utils import split_markdown_by_heading, run_llm_process, write_debug_chunks
 from pathlib import Path
 from config import max_chars_per_chunk, DEBUG_TRANS_DIR
 
