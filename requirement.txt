@@ -1,2 +1,4 @@
 llama-index
 tqdm
+fastapi
+uvicorn
